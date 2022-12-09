@@ -34,3 +34,9 @@ begin
 	update item set m_Loan=0 where id=old.id and librarycode=old.librarycode;
     end$$
 delimiter ;
+delimiter $$
+create trigger t_add_borrowedbook after update on item for each row
+begin 
+	update title set borrowednumber=(select count(*) from item where new.id=old.id and(m_Reservation=1 or m_Loan=1));
+    end$$
+delimiter ;
